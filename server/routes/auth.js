@@ -14,6 +14,8 @@ router.get("/testAPI", (req, res) => {
 });
 
 router.post("/register", async (req, res) => {
+  // console.log(registerValidation(req.body));
+  // return res.send("註冊使用者頁面");
   // 確認數據是否符合規範
   let { error } = registerValidation(req.body);
   if (error) return res.status(400).send(error.details[0].message);
@@ -25,6 +27,7 @@ router.post("/register", async (req, res) => {
   // 製作新用戶
   let { username, email, password, role } = req.body;
   let newUser = new User({ username, email, password, role });
+  console.log(newUser);
   try {
     let savedUser = await newUser.save();
     return res.send({
@@ -34,9 +37,6 @@ router.post("/register", async (req, res) => {
   } catch (e) {
     return res.status(500).send("無法儲存使用者。。。");
   }
-
-  //   console.log(registerValidation(req.body));
-  //   return res.send("註冊使用者頁面");
 });
 
 module.exports = router;

@@ -30,6 +30,11 @@ const userSchema = new Schema({
 });
 
 // instance methods
+/**
+ * 它是在使用者模型(User model)的實例上呼叫的
+ * 例如，如果你有一個使用者物件 const user = new User({ user data });
+ * 然後可以使用 user.isStudent() 來檢查該使用者是否是學生
+ */
 userSchema.methods.isStudent = function () {
   return this.role == "student";
 };
@@ -39,12 +44,16 @@ userSchema.methods.isInstructor = function () {
 };
 
 userSchema.methods.comparePassword = async function (password, cb) {
-  let result = await bcrypt.compare(password, this.password);
+  let result = await bcrypt.hash(password, this.password);
 
   return cb(null, result);
 };
 
 // mongoose middlewares
+/**
+ * 這是一個在保存(save)使用者模型到資料庫之前(pre-save)執行的中介軟體(middleware)或者稱為"pre-hook"。
+ * 它在每次儲存(save)使用者模型之前被呼叫
+ */
 // 若使用者為新用戶，或者是正在更改密碼，則將密碼進行雜湊處理
 userSchema.pre("save", async function (next) {
   // this.isNew是mongoose內建的功能,如果是全新的 isNew就是true
