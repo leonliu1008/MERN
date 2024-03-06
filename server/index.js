@@ -7,6 +7,7 @@ const authRoute = require("./routes").auth;
 const courseRoute = require("./routes").course;
 const passport = require("passport");
 require("./config/passport")(passport); // config/passport裡面有function,後面括號可以直接執行function,接著直接把上面的passport都進去
+const cors = require("cors");
 
 // 連結MongoDB
 mongoose
@@ -21,6 +22,7 @@ mongoose
 // middleware
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use(cors());
 
 app.use("/api/user", authRoute);
 // course routeu應該被jwt保護
