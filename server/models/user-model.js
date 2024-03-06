@@ -36,17 +36,24 @@ const userSchema = new Schema({
  * 然後可以使用 user.isStudent() 來檢查該使用者是否是學生
  */
 userSchema.methods.isStudent = function () {
+  console.log("進行isStudent驗證");
   return this.role == "student";
 };
 
 userSchema.methods.isInstructor = function () {
+  console.log("進行isInstructor驗證");
   return this.role == "instructor";
 };
 
 userSchema.methods.comparePassword = async function (password, cb) {
-  let result = await bcrypt.hash(password, this.password);
-
-  return cb(null, result);
+  console.log("進行comparePassword驗證");
+  let result;
+  try {
+    result = await bcrypt.compare(password, this.password); //會回傳一個包含雜湊後的密碼的字串
+    return cb(null, result);
+  } catch (e) {
+    return cb(e, result);
+  }
 };
 
 // mongoose middlewares

@@ -1,5 +1,7 @@
 const Joi = require("joi");
 
+// 驗證符合 schema 規定
+
 const registerValidation = (data) => {
   const schema = Joi.object({
     username: Joi.string().min(3).max(50).required(),
@@ -14,7 +16,7 @@ const registerValidation = (data) => {
 
 const loginValidation = (data) => {
   const schema = Joi.object({
-    email: Joi.string().min(6).max(50).required.email(),
+    email: Joi.string().min(6).max(50).required().email(),
     password: Joi.string().min(6).max(255).required(),
   });
 
@@ -23,9 +25,9 @@ const loginValidation = (data) => {
 
 const courseValidation = (data) => {
   const schema = Joi.object({
-    title: Joi.string().min(6).max(50).required,
+    title: Joi.string().min(6).max(50).required(),
     description: Joi.string().min(6).max(50).required(),
-    price: Joi.number().min(10).max(9999).required,
+    price: Joi.number().min(10).max(9999).required(),
   });
 
   return schema.validate(data);
