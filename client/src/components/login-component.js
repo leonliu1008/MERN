@@ -1,15 +1,44 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import AuthService from "../services/auth.service";
+import AuthService from "../services/auth_service";
 
-const LoginComponent = (props) => {
+const LoginComponent = ({ currentUser, setCurrentUser }) => {
+  const navigate = useNavigate();
+  let [email, setEmail] = useState("");
+  let [password, setPassword] = useState("");
+  let [message, setMessage] = useState("");
+
+  const handleEmail = (e) => {
+    setEmail(e.target.value);
+  };
+  const handlePassword = (e) => {
+    setPassword(e.target.value);
+  };
+  const handleLogin = async () => {
+    try {
+      let response = await AuthService.login(email, password);
+      // console.log(response);
+      // localStorage.setItem是JS內建的方法
+      // 把 JSON 字串存儲在名為 "user" 的本地儲存鍵中 ex.使用情境：保持登入狀態
+      localStorage.setItem("user", JSON.stringify(response.data));
+      window.alert("登入成功!您現在將重新導向到個人頁面。");
+      // 登入成功 所以將全域在使用的CurrentUser用setCurrentUser更新
+      setCurrentUser(AuthService.getCurrentUser());
+      navigate("/profile");
+    } catch (e) {
+      // console.log(e.response.data);
+      setMessage(e.response.data);
+    }
+  };
+
   return (
     <div style={{ padding: "3rem" }} className="col-md-12">
       <div>
+        {message && <div className="alert alert-danger">{message}</div>}
         <div className="form-group">
           <label htmlFor="username">電子信箱：</label>
           <input
-            onChange={handleChangeEmail}
+            onChange={handleEmail}
             type="text"
             className="form-control"
             name="email"
@@ -19,7 +48,7 @@ const LoginComponent = (props) => {
         <div className="form-group">
           <label htmlFor="password">密碼：</label>
           <input
-            onChange={handleChangePassword}
+            onChange={handlePassword}
             type="password"
             className="form-control"
             name="password"

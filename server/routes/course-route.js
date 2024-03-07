@@ -24,6 +24,14 @@ router.get("/", async (req, res) => {
   }
 });
 
+// 用講師id尋找課程
+router.get("/instructor/:_instructor_id", async (req, res) => {
+  let { _instructor_id } = req.params;
+  Course.find({ instructor: _instructor_id })
+    .populate("instructor", [username, email])
+    .exec();
+});
+
 // 用課程id尋找課程
 router.get("/:_id", async (req, res) => {
   let { _id } = req.params;

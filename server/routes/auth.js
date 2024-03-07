@@ -82,3 +82,14 @@ router.post("/login", async (req, res) => {
 });
 
 module.exports = router;
+
+/**
+ * JWT（JSON Web Token）通常包含一個"exp"（過期）的字段，表示該令牌的有效期限
+ * 前端使用 jwt.sign 方法生成 JWT 時，你可以設定過期時間，確保該令牌在一段時間後失效
+ * 設定過期時間為一小時
+ */
+// const jwt = require('jsonwebtoken');
+// const tokenObject = { /* your token data */ };
+// const secretKey = process.env.PASSPORT_SECRET;
+
+// const token = jwt.sign(tokenObject, secretKey, { expiresIn: '1h' });
