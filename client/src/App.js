@@ -5,11 +5,14 @@ import HomeComponent from "./components/home-component";
 import RegisterComponent from "./components/register-component";
 import LoginComponent from "./components/login-component";
 import ProfileComponent from "./components/profile-component";
-import AutuService from "./services/auth_service";
+import AuthService from "./services/auth_service";
 import CourseComponent from "./components/course-component";
+import PostCourseComponent from "./components/postCourse-component";
+import EnrollComponent from "./components/enroll-component";
 
 function App() {
-  let [currentUser, setCurrentUser] = useState(AutuService.getCurrentUser());
+  // 取得localStorage user資料,這樣就可以將currentUser傳至每個route
+  let [currentUser, setCurrentUser] = useState(AuthService.getCurrentUser());
   return (
     <BrowserRouter>
       <Routes>
@@ -43,6 +46,24 @@ function App() {
             path="course"
             element={
               <CourseComponent
+                currentUser={currentUser}
+                setCurrentUser={setCurrentUser}
+              />
+            }
+          />
+          <Route
+            path="postCourse"
+            element={
+              <PostCourseComponent
+                currentUser={currentUser}
+                setCurrentUser={setCurrentUser}
+              />
+            }
+          />
+          <Route
+            path="enroll"
+            element={
+              <EnrollComponent
                 currentUser={currentUser}
                 setCurrentUser={setCurrentUser}
               />

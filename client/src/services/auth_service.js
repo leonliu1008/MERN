@@ -26,7 +26,7 @@ class AuthService {
       email,
       password,
       role,
-    }); //用於處理與後端 API 的通信,可以傳到後端的此route
+    }); //用於處理與後端 API 的通信,可以傳到後端的此route,然後進行後端route.post
   }
   getCurrentUser() {
     // 取得localStorage user資料 轉成JSON傳回(當登入狀態)
