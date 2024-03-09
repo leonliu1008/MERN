@@ -39,6 +39,7 @@ class CourseService {
     // 把get的資訊帶到後端, 後端會看請求 前往route.get("/API_URL + "/indtructor/" + _id")
     return axios.get(API_URL + "/instructor/" + _id, {
       headers: {
+        // 設定"Authorization"標頭，並將其值設為使用者的驗證令牌(token)
         Authorization: token,
       },
     });
@@ -53,6 +54,21 @@ class CourseService {
       token = "";
     }
     return axios.get(API_URL + "/student/" + _id, {
+      headers: {
+        Authorization: token,
+      },
+    });
+  }
+
+  getCourseByName(courseName) {
+    let token;
+    if (localStorage.getItem("user")) {
+      token = JSON.parse(localStorage.getItem("user")).token;
+    } else {
+      token = "";
+    }
+
+    return axios.get(API_URL + "/findByName/" + courseName, {
       headers: {
         Authorization: token,
       },

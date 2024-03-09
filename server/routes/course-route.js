@@ -55,6 +55,20 @@ router.get("/:_id", async (req, res) => {
   }
 });
 
+// 用課程名稱尋找課程
+router.get("/findByName/:courseName", async (req, res) => {
+  let { courseName } = req.params;
+  try {
+    // Course.find 因為傳回去才會是陣列,react裡面的.map的功能必須是陣列
+    let couresFound = await Course.find({ title: courseName }) //資料庫的課程名稱=title,用收進來的name對應title
+      .populate("instructor", ["email", "username"])
+      .exec();
+    return res.send(couresFound);
+  } catch (e) {
+    return res.status(500).send(e);
+  }
+});
+
 // 新增課程
 router.post("/", async (req, res) => {
   // 創見新課程之前,驗證數據符合規範
