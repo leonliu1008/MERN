@@ -46,6 +46,12 @@ app.use(
   courseRoute
 );
 
+app.get("/test", (req, res) => {
+  res.json({
+    message: "test work is ok!!",
+  });
+});
+
 // 只有登入系統的人,才能夠新增課程或是註冊課程
 
 app.listen(8080, () => {
