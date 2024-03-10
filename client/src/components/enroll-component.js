@@ -17,11 +17,23 @@ const EnrollComponent = ({ currentUser, setCurrentUser }) => {
   const handleSearch = () => {
     // console.log(searchInput);
 
-    CourseService.getCourseByName(searchInput)
+    CourseService.getCourseByName(searchInput) //將輸入的課程名稱傳到後端搜尋
       .then((courseName) => {
         // 若要用.map渲染到網頁,必須檢查來源是否為Array
         setSearchResult(courseName.data);
         // console.log(courseName.data);
+      })
+      .catch((e) => {
+        console.log(e);
+      });
+  };
+
+  const handleEnroll = (e) => {
+    console.log(e.target);
+    CourseService.enroll(e.target.id)
+      .then(() => {
+        window.alert("課程註冊成功!!重新導向課程頁面");
+        navigate("/course");
       })
       .catch((e) => {
         console.log(e);
@@ -80,8 +92,9 @@ const EnrollComponent = ({ currentUser, setCurrentUser }) => {
                   </p>
                   <a
                     href="#"
-                    key={course._id}
+                    id={course._id}
                     className="card-text btn btn-primary"
+                    onClick={handleEnroll}
                   >
                     註冊課程
                   </a>
@@ -96,3 +109,25 @@ const EnrollComponent = ({ currentUser, setCurrentUser }) => {
 };
 
 export default EnrollComponent;
+
+// Array[description
+//   :
+//   "讓你知道怎麼選好喝的飲料"
+//   instructor
+//   :
+//   {_id: '65ec74fd6842d101221c0e1a', username: 'kem', email: 'kem5923638@yahoo.com.tw'}
+//   price
+//   :
+//   1617
+//   students
+//   :
+//   []
+//   title
+//   :
+//   "2024買飲料活動"
+//   __v
+//   :
+//   0
+//   _id
+//   :
+//   "65ec75416842d101221c0e1e"]

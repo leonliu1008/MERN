@@ -33,13 +33,17 @@ router.get("/instructor/:_instructor_id", async (req, res) => {
   return res.send(coursesFound);
 });
 
-// 用學生id尋找課程
+// 用學生id尋找註冊的課程
 router.get("/student/:_student_id", async (req, res) => {
   let { _student_id } = req.params;
-  let coursesFound = await Course.find({ students: _student_id })
-    .populate("instructor", ["username", "email"])
-    .exec();
-  return res.send(coursesFound);
+  try {
+    let coursesFound = await Course.find({ students: _student_id })
+      .populate("instructor", ["username", "email"])
+      .exec();
+    return res.send(coursesFound);
+  } catch (e) {
+    return res.send(e);
+  }
 });
 
 // 用課程id尋找課程
@@ -140,6 +144,20 @@ router.patch("/:_id", async (req, res) => {
     }
   } catch (e) {
     return res.status(500).send(e);
+  }
+});
+
+// 註冊課程(學生透過id註冊新課程)
+router.post("/enroll/:_id", async (req, res) => {
+  // console.log("進入enroll");
+  let { _id } = req.params;
+  try {
+    let course = await Course.findOne({ _id }).exec();
+    course.students.push(req.user._id); // 因中間件使用者會帶著token來,代表使用者有帶著資訊,所以用push將資料放回使用者
+    await course.save();
+    return res.send("註冊完成");
+  } catch (e) {
+    return res.send(e);
   }
 });
 
