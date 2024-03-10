@@ -32,7 +32,11 @@ router.post("/register", async (req, res) => {
   // 製作新用戶
   let { username, email, password, role } = req.body;
   let newUser = new User({ username, email, password, role });
-  console.log(newUser);
+  console.log({
+    username: newUser.username,
+    email: newUser.email,
+    role: newUser.role,
+  });
   try {
     let savedUser = await newUser.save();
     return res.send({

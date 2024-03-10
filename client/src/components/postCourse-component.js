@@ -22,7 +22,7 @@ const PostCourseComponent = (props) => {
     setPrice(e.target.value);
   };
   const postCourse = () => {
-    console.log("進入PO課程");
+    // console.log("進入PO課程");
     CourseService.post(title, description, price)
       .then(() => {
         window.alert("新課程已創建成功");

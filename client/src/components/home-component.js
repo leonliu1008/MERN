@@ -12,9 +12,9 @@ const HomeComponent = () => {
               作為後端服務器。這種項目稱為 MERN
               項目，它是創建現代網站的最流行的方式之一。
             </p>
-            <button className="btn btn-primary btn-lg" type="button">
+            {/* <button className="btn btn-primary btn-lg" type="button">
               看看它怎麼運作。
-            </button>
+            </button> */}
           </div>
         </div>
 
