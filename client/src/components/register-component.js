@@ -38,6 +38,18 @@ const RegisterComponent = () => {
       });
   };
 
+  const buttonStyle = {
+    margin: "0rem 1rem",
+    padding: "0.2rem 0.5rem",
+    backgroundColor: "rgb(7, 7, 7)",
+    color: "rgb(255, 255, 255)",
+    border: "none",
+    borderRadius: "5px",
+    cursor: "pointer",
+    alignItems: "center",
+    textDecoration: "none",
+  };
+
   return (
     <div style={{ padding: "3rem" }} className="col-md-12">
       <div>
@@ -86,6 +98,14 @@ const RegisterComponent = () => {
         <br />
         <button onClick={handleRegister} className="btn btn-primary">
           <span>註冊會員</span>
+        </button>
+        <button className="btn btn-lg btn-google" style={buttonStyle}>
+          <img
+            src="https://img.icons8.com/color/16/000000/google-logo.png"
+            alt="Google Logo"
+            style={{ marginRight: "0.5rem" }}
+          />
+          透過Google登入
         </button>
       </div>
     </div>
