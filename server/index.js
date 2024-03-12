@@ -9,7 +9,7 @@ const passport = require("passport");
 require("./config/passport")(passport); // config/passport裡面有function,後面括號可以直接執行function,接著直接把上面的passport都進去
 const cors = require("cors");
 
-// const CONNECTION_URL = process.env.CONNECTION_KEY;
+const CONNECTION_URL = process.env.CONNECTION_KEY;
 // 連結MongoDB
 // **local**
 // mongoose
