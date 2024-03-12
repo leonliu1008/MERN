@@ -65,7 +65,7 @@ router.post("/login", async (req, res) => {
 
   // 正在放入一個回調函式(非宣告在外面的函式)
   fundUser.comparePassword(req.body.password, (err, isMatch) => {
-    if (err) return res.status(500), send(err); //err若收到null的話是false,所以就不會執行此行
+    if (err) return res.status(500).send(err); //err若收到null的話是false,所以就不會執行此行
     // (isMatch)去判斷是因為如果compare出來密碼不合,cb(e,result)中的result就會無法顯示，於布林值來說是false
     // 而如果compare出來密碼一致，則cb(null,result)裡的result就會顯示，於布林值來說是true
     if (isMatch) {

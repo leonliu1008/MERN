@@ -16,8 +16,8 @@ const LoginComponent = ({ currentUser, setCurrentUser }) => {
   };
   const handleLogin = async () => {
     try {
-      let response = await AuthService.login(email, password);
-      // console.log(response);
+      let response = await AuthService.login(email, password); //送至後端
+      console.log(response);
       // localStorage.setItem是JS內建的方法
       // 把 JSON 字串存儲在名為 "user" 的本地儲存鍵中 ex.使用情境：保持登入狀態
       localStorage.setItem("user", JSON.stringify(response.data));
