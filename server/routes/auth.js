@@ -3,6 +3,7 @@ const registerValidation = require("../validation").registerValidation;
 const loginValidation = require("../validation").loginValidation;
 const User = require("../models").user;
 const jwt = require("jsonwebtoken");
+const passport = require("passport");
 
 // middleware
 router.use((req, res, next) => {

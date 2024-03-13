@@ -1,6 +1,7 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom"; // 重新導向的功能
 import AutuService from "../services/auth_service";
+import { useGoogleLogin } from "@react-oauth/google";
 
 const RegisterComponent = () => {
   const navigate = useNavigate(); // 重新導向的功能
@@ -37,6 +38,10 @@ const RegisterComponent = () => {
         setMessage(e.response.data);
       });
   };
+
+  const login = useGoogleLogin({
+    onSuccess: (tokenResponse) => console.log(tokenResponse),
+  });
 
   const buttonStyle = {
     margin: "0rem 1rem",
@@ -99,7 +104,11 @@ const RegisterComponent = () => {
         <button onClick={handleRegister} className="btn btn-primary">
           <span>註冊會員</span>
         </button>
-        <button className="btn btn-lg btn-google" style={buttonStyle}>
+        <button
+          onClick={login}
+          className="btn btn-lg btn-google"
+          style={buttonStyle}
+        >
           <img
             src="https://img.icons8.com/color/16/000000/google-logo.png"
             alt="Google Logo"

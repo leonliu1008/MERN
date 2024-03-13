@@ -35,3 +35,18 @@ function App() {
 }
 
 export default App;
+
+{
+  /* <button
+onClick={handleRegisterGoogle}
+className="btn btn-lg btn-google"
+style={buttonStyle}
+>
+<img
+  src="https://img.icons8.com/color/16/000000/google-logo.png"
+  alt="Google Logo"
+  style={{ marginRight: "0.5rem" }}
+/>
+透過Google登入
+</button> */
+}
