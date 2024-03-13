@@ -1,9 +1,10 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom"; // 重新導向的功能
 import AutuService from "../services/auth_service";
 import { useGoogleLogin } from "@react-oauth/google";
 
 const RegisterComponent = () => {
+  const apiEndpoint = "https://www.googleapis.com/oauth2/v1/userinfo";
   const navigate = useNavigate(); // 重新導向的功能
   let [username, setUsername] = useState("");
   let [email, setEmail] = useState("");
@@ -39,8 +40,35 @@ const RegisterComponent = () => {
       });
   };
 
+  const handleGoogleLogin = () => {
+    // 檢查 role 欄位是否為 "student" 或 "instructor"
+    if (role === "student" || role === "instructor") {
+      // 觸發 Google 登入
+      login();
+    } else {
+      alert("請填入有效的身份（student 或 instructor）");
+    }
+  };
+
   const login = useGoogleLogin({
-    onSuccess: (tokenResponse) => console.log(tokenResponse),
+    onSuccess: (credentialResponse) => {
+      const accessToken = credentialResponse.access_token;
+      const url = `${apiEndpoint}?access_token=${accessToken}`;
+      fetch(url)
+        .then((response) => {
+          if (response.ok) {
+            return response.json();
+          } else {
+            throw new Error(`請求失敗，狀態碼: ${response.status}`);
+          }
+        })
+        .then((userInfo) => {
+          console.log("使用者資訊:", userInfo);
+        })
+        .catch((error) => {
+          console.error("錯誤:", error);
+        });
+    },
   });
 
   const buttonStyle = {
@@ -105,7 +133,7 @@ const RegisterComponent = () => {
           <span>註冊會員</span>
         </button>
         <button
-          onClick={login}
+          onClick={handleGoogleLogin}
           className="btn btn-lg btn-google"
           style={buttonStyle}
         >
