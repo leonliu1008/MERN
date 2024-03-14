@@ -20,6 +20,9 @@ class AuthService {
     // JS內建功能(當作登出功能)
     localStorage.removeItem("user");
   }
+  googleLogin(userInfo) {
+    return axios.post(API_URL + "/google", { userInfo });
+  }
   regiser(username, email, password, role) {
     //axios.post用法順序:URL+route+大括號內的value,傳遞完成會回傳一個promise,所以要return接
     return axios.post(API_URL + "/register", {

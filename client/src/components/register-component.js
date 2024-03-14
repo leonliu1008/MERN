@@ -51,23 +51,27 @@ const RegisterComponent = () => {
   };
 
   const login = useGoogleLogin({
-    onSuccess: (credentialResponse) => {
+    onSuccess: async (credentialResponse) => {
       const accessToken = credentialResponse.access_token;
       const url = `${apiEndpoint}?access_token=${accessToken}`;
-      fetch(url)
-        .then((response) => {
-          if (response.ok) {
-            return response.json();
-          } else {
-            throw new Error(`請求失敗，狀態碼: ${response.status}`);
-          }
-        })
-        .then((userInfo) => {
-          console.log("使用者資訊:", userInfo);
-        })
-        .catch((error) => {
-          console.error("錯誤:", error);
-        });
+      try {
+        const response = await fetch(url);
+        if (!response.ok) {
+          throw new Error(`請求失敗，狀態碼: ${response.status}`);
+        }
+        const userInfo = await response.json();
+        console.log("使用者資訊:", userInfo);
+        try {
+          const data = await AutuService.googleLogin(userInfo);
+          console.log(data);
+          window.alert("註冊成功。您現在將被導向到登入頁面");
+          // navigate("/login");
+        } catch (e) {
+          console.log(e);
+        }
+      } catch (e) {
+        console.error("錯誤:", e);
+      }
     },
   });
 
@@ -150,3 +154,18 @@ const RegisterComponent = () => {
 };
 
 export default RegisterComponent;
+
+// fetch(url)
+//   .then((response) => {
+//     if (response.ok) {
+//       return response.json();
+//     } else {
+//       throw new Error(`請求失敗，狀態碼: ${response.status}`);
+//     }
+//   })
+//   .then((userInfo) => {
+//     console.log("使用者資訊:", userInfo);
+//   })
+//   .catch((error) => {
+//     console.error("錯誤:", error);
+//   });

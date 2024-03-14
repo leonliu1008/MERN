@@ -49,6 +49,11 @@ router.post("/register", async (req, res) => {
   }
 });
 
+router.post("/google", async (req, res) => {
+  console.log(req.body);
+  return res.send("回傳server收到");
+});
+
 router.post("/login", async (req, res) => {
   // 確認數據是否符合規範
   let { error } = loginValidation(req.body);
