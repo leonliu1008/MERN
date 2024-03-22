@@ -1,6 +1,7 @@
 const router = require("express").Router();
 const Course = require("../models").course;
 const courseValidation = require("../validation").courseValidation;
+const googleCourseValidation = require("../validation").googleCourseValidation;
 
 router.use((req, res, next) => {
   console.log("coures route 正在接受一個requesst...");
@@ -76,12 +77,19 @@ router.get("/findByName/:courseName", async (req, res) => {
 // 新增課程
 router.post("/", async (req, res) => {
   // 創見新課程之前,驗證數據符合規範
-  let { error } = courseValidation(req.body);
+  // console.log(req.body);
+  let validation;
+  if (req.body.googleToken) {
+    validation = googleCourseValidation;
+  } else {
+    validation = courseValidation;
+  }
+  let { error } = validation(req.body);
   if (error) {
-    console.log("courseValidation 驗證失敗");
+    console.log("validation 驗證失敗");
     return res.status(400).send(error.details[0].message);
   } else {
-    console.log("courseValidation 驗證成功");
+    console.log("validation 驗證成功");
   }
 
   if (req.user.isStudent()) {
@@ -90,8 +98,15 @@ router.post("/", async (req, res) => {
       .send("只有講師才能發布新課程。若已是講師，請透過講師帳號登入。");
   }
 
-  let { title, description, price } = req.body;
-  // 創見課程(關鍵是填入req.user._id)
+  let { title, description, price, googleToken } = req.body;
+  let instructorModel;
+  if (googleToken) {
+    instructorModel = "GoogleUser"; // 如果 googleToken 不存在，表示使用者是一般註冊的
+  } else {
+    instructorModel = "User"; // 如果 googleToken 存在，表示使用者是透過 Google 登入的
+  }
+  console.log(instructorModel);
+  // 創見課程(關鍵是填入req.user._id);
   try {
     let newCourse = new Course({
       title,
@@ -99,6 +114,7 @@ router.post("/", async (req, res) => {
       price,
       //創見課程的人,instructor 會填入req.user._id(一定要等於req.user._id)
       instructor: req.user._id, //已通過中間件驗證,所以可以得到req.user._id(instructor的type建立的時候是_id)
+      instructorModel,
     });
     // let savedCourse = await newCourse.save();
     await newCourse.save();

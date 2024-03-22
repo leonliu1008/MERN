@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import CourseService from "../services/course.service";
 
@@ -23,7 +23,8 @@ const PostCourseComponent = (props) => {
   };
   const postCourse = () => {
     // console.log("進入PO課程");
-    CourseService.post(title, description, price)
+    // console.log(currentUser?.googleToken);
+    CourseService.post(title, description, price, currentUser?.googleToken)
       .then(() => {
         window.alert("新課程已創建成功");
         navigate("/course");

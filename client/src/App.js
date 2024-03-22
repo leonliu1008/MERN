@@ -13,8 +13,14 @@ import EnrollComponent from "./components/enroll-component";
 function App() {
   // 取得localStorage user資料,這樣就可以將currentUser傳至每個route
   let [currentUser, setCurrentUser] = useState(AuthService.getCurrentUser());
+  const handleLogout = () => {
+    AuthService.logout(); // 清空 Local storage
+    window.alert("登出成功!現在您會導向到首頁");
+    setCurrentUser(null);
+  };
   return (
     <BrowserRouter>
+      {/* <button onClick={handleLogout}>登出按鈕</button> */}
       <Routes>
         <Route
           path="/"
@@ -23,7 +29,15 @@ function App() {
           }
         >
           <Route index element={<HomeComponent />} />
-          <Route path="register" element={<RegisterComponent />} />
+          <Route
+            path="register"
+            element={
+              <RegisterComponent
+                currentUser={currentUser}
+                setCurrentUser={setCurrentUser}
+              />
+            }
+          />
           <Route
             path="login"
             element={

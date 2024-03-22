@@ -62,7 +62,7 @@ const NavComponent = ({ currentUser, setCurrentUser }) => {
                   </li>
                 )}
 
-                {currentUser && (
+                {currentUser && currentUser.user.role && (
                   <li className="nav-item">
                     <Link className="nav-link" to="/course">
                       課程頁面
