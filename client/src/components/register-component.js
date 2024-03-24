@@ -1,10 +1,8 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom"; // 重新導向的功能
 import AutuService from "../services/auth_service";
-import { useGoogleLogin } from "@react-oauth/google";
 
 const RegisterComponent = () => {
-  const apiEndpoint = "https://www.googleapis.com/oauth2/v1/userinfo";
   const navigate = useNavigate(); // 重新導向的功能
   let [username, setUsername] = useState("");
   let [email, setEmail] = useState("");
@@ -38,53 +36,6 @@ const RegisterComponent = () => {
       .catch((e) => {
         setMessage(e.response.data);
       });
-  };
-
-  const handleGoogleLogin = () => {
-    // 檢查 role 欄位是否為 "student" 或 "instructor"
-    if (role === "student" || role === "instructor") {
-      // 觸發 Google 登入
-      login();
-    } else {
-      alert("請填入有效的身份（student 或 instructor）");
-    }
-  };
-
-  const login = useGoogleLogin({
-    onSuccess: async (credentialResponse) => {
-      const accessToken = credentialResponse.access_token;
-      const url = `${apiEndpoint}?access_token=${accessToken}`;
-      try {
-        const response = await fetch(url);
-        if (!response.ok) {
-          throw new Error(`請求失敗，狀態碼: ${response.status}`);
-        }
-        const userInfo = await response.json();
-        console.log("使用者資訊:", userInfo);
-        try {
-          const data = await AutuService.googleLogin(userInfo);
-          console.log(data);
-          window.alert("註冊成功。您現在將被導向到登入頁面");
-          // navigate("/login");
-        } catch (e) {
-          console.log(e);
-        }
-      } catch (e) {
-        console.error("錯誤:", e);
-      }
-    },
-  });
-
-  const buttonStyle = {
-    margin: "0rem 1rem",
-    padding: "0.2rem 0.5rem",
-    backgroundColor: "rgb(7, 7, 7)",
-    color: "rgb(255, 255, 255)",
-    border: "none",
-    borderRadius: "5px",
-    cursor: "pointer",
-    alignItems: "center",
-    textDecoration: "none",
   };
 
   return (
@@ -136,36 +87,9 @@ const RegisterComponent = () => {
         <button onClick={handleRegister} className="btn btn-primary">
           <span>註冊會員</span>
         </button>
-        <button
-          onClick={handleGoogleLogin}
-          className="btn btn-lg btn-google"
-          style={buttonStyle}
-        >
-          <img
-            src="https://img.icons8.com/color/16/000000/google-logo.png"
-            alt="Google Logo"
-            style={{ marginRight: "0.5rem" }}
-          />
-          透過Google登入
-        </button>
       </div>
     </div>
   );
 };
 
 export default RegisterComponent;
-
-// fetch(url)
-//   .then((response) => {
-//     if (response.ok) {
-//       return response.json();
-//     } else {
-//       throw new Error(`請求失敗，狀態碼: ${response.status}`);
-//     }
-//   })
-//   .then((userInfo) => {
-//     console.log("使用者資訊:", userInfo);
-//   })
-//   .catch((error) => {
-//     console.error("錯誤:", error);
-//   });
