@@ -2,9 +2,9 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom"; // 重新導向的功能
 import AutoService from "../services/auth_service";
 import { useGoogleLogin } from "@react-oauth/google";
-import AutuService from "../services/auth_service";
 
 const RegisterComponent = ({ currentUser, setCurrentUser }) => {
+  const apiEndpoint = "https://www.googleapis.com/oauth2/v1/userinfo";
   const navigate = useNavigate(); // 重新導向的功能
   let [username, setUsername] = useState("");
   let [email, setEmail] = useState("");
@@ -152,6 +152,21 @@ const RegisterComponent = ({ currentUser, setCurrentUser }) => {
 };
 
 export default RegisterComponent;
+
+// fetch(url)
+//   .then((response) => {
+//     if (response.ok) {
+//       return response.json();
+//     } else {
+//       throw new Error(`請求失敗，狀態碼: ${response.status}`);
+//     }
+//   })
+//   .then((userInfo) => {
+//     console.log("使用者資訊:", userInfo);
+//   })
+//   .catch((error) => {
+//     console.error("錯誤:", error);
+//   });
 
 // const handleGoogleLogin = () => {
 //   // 檢查 role 欄位是否為 "student" 或 "instructor"
