@@ -1,8 +1,10 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom"; // 重新導向的功能
+import AutoService from "../services/auth_service";
+import { useGoogleLogin } from "@react-oauth/google";
 import AutuService from "../services/auth_service";
 
-const RegisterComponent = () => {
+const RegisterComponent = ({ currentUser, setCurrentUser }) => {
   const navigate = useNavigate(); // 重新導向的功能
   let [username, setUsername] = useState("");
   let [email, setEmail] = useState("");
@@ -28,7 +30,7 @@ const RegisterComponent = () => {
 
   const handleRegister = () => {
     //執行服務裡面的class裡面的method(將input內容傳至後端)
-    AutuService.regiser(username, email, password, role)
+    AutoService.regiser(username, email, password, role)
       .then(() => {
         window.alert("註冊成功。您現在將被導向到登入頁面");
         navigate("/login");
@@ -36,6 +38,51 @@ const RegisterComponent = () => {
       .catch((e) => {
         setMessage(e.response.data);
       });
+  };
+
+  // const login = useGoogleLogin({
+  //   onSuccess: (tokenResponse) => console.log(tokenResponse),
+  // });
+
+  const login = useGoogleLogin({
+    onSuccess: async (credentialResponse) => {
+      const accessToken = credentialResponse.access_token;
+      const url = `${apiEndpoint}?access_token=${accessToken}`;
+      try {
+        const response = await fetch(url);
+        if (!response.ok) {
+          throw new Error(`請求失敗，狀態碼: ${response.status}`);
+        }
+        // console.log(accessToken);
+        const userInfo = await response.json();
+        try {
+          const data = await AutoService.googleLogin(userInfo);
+          data.data.googleToken = accessToken;
+          // console.log(JSON.stringify(data.data));
+          localStorage.setItem("user", JSON.stringify(data.data));
+          setCurrentUser(AutoService.getCurrentUser());
+
+          window.alert("註冊成功。您現在將被導向個人頁面");
+          navigate("/profile");
+        } catch (e) {
+          console.log(e);
+        }
+      } catch (e) {
+        console.error("錯誤:", e);
+      }
+    },
+  });
+
+  const buttonStyle = {
+    margin: "0rem 1rem",
+    padding: "0.2rem 0.5rem",
+    backgroundColor: "rgb(7, 7, 7)",
+    color: "rgb(255, 255, 255)",
+    border: "none",
+    borderRadius: "5px",
+    cursor: "pointer",
+    alignItems: "center",
+    textDecoration: "none",
   };
 
   return (
@@ -87,9 +134,31 @@ const RegisterComponent = () => {
         <button onClick={handleRegister} className="btn btn-primary">
           <span>註冊會員</span>
         </button>
+        <button
+          onClick={login}
+          className="btn btn-lg btn-google"
+          style={buttonStyle}
+        >
+          <img
+            src="https://img.icons8.com/color/16/000000/google-logo.png"
+            alt="Google Logo"
+            style={{ marginRight: "0.5rem" }}
+          />
+          透過Google登入
+        </button>
       </div>
     </div>
   );
 };
 
 export default RegisterComponent;
+
+// const handleGoogleLogin = () => {
+//   // 檢查 role 欄位是否為 "student" 或 "instructor"
+//   if (role === "student" || role === "instructor") {
+//     // 觸發 Google 登入
+//     login();
+//   } else {
+//     alert("請填入有效的身份（student 或 instructor）");
+//   }
+// };

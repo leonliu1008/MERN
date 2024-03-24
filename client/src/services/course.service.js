@@ -10,17 +10,18 @@ const API_URL = "http://localhost:8080/api/courses";
 
 class CourseService {
   // 製作PO文method
-  post(title, description, price) {
+  post(title, description, price, googleToken) {
     let token; //要PO文之前需要先確定使用者有沒有token
     if (localStorage.getItem("user")) {
       token = JSON.parse(localStorage.getItem("user")).token;
     } else {
       token = "";
     }
+    // console.log("Authorization Token:", googleToken);
     //axios.post用法順序:URL+route+大括號內的value,可以1個以上的物件,傳遞完成會回傳一個promise,所以要return接
     return axios.post(
       API_URL,
-      { title, description, price },
+      { title, description, price, googleToken },
       {
         headers: {
           Authorization: token,
@@ -97,3 +98,23 @@ class CourseService {
 }
 
 export default new CourseService();
+
+// // 製作PO文method
+// post(title, description, price, googleToken) {
+//   let token; //要PO文之前需要先確定使用者有沒有token
+//   if (localStorage.getItem("user")) {
+//     token = JSON.parse(localStorage.getItem("user")).token;
+//   } else {
+//     token = "";
+//   }
+//   //axios.post用法順序:URL+route+大括號內的value,可以1個以上的物件,傳遞完成會回傳一個promise,所以要return接
+//   return axios.post(
+//     API_URL,
+//     { title, description, price },
+//     {
+//       headers: {
+//         Authorization: token,
+//       },
+//     }
+//   );
+// } //用於處理與後端 API 的通信,可以傳到後端的此route

@@ -32,10 +32,21 @@ const courseValidation = (data) => {
 
   return schema.validate(data);
 };
+const googleCourseValidation = (data) => {
+  const schema = Joi.object({
+    title: Joi.string().min(6).max(50).required(),
+    description: Joi.string().min(6).max(50).required(),
+    price: Joi.number().min(10).max(9999).required(),
+    googleToken: Joi.string().required(),
+  });
+
+  return schema.validate(data);
+};
 
 module.exports.registerValidation = registerValidation;
 module.exports.loginValidation = loginValidation;
 module.exports.courseValidation = courseValidation;
+module.exports.googleCourseValidation = googleCourseValidation;
 
 // return schema.validate(data);
 // 如果 data 符合 schema 規定，輸出會是：

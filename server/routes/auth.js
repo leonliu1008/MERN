@@ -2,6 +2,7 @@ const router = require("express").Router();
 const registerValidation = require("../validation").registerValidation;
 const loginValidation = require("../validation").loginValidation;
 const User = require("../models").user;
+const GoolgeUser = require("../models").googleUser;
 const jwt = require("jsonwebtoken");
 const passport = require("passport");
 
@@ -13,6 +14,19 @@ router.use((req, res, next) => {
 
 router.get("/testAPI", (req, res) => {
   return res.send("成功連結auth route!!");
+});
+
+router.post("/profile", async (req, res) => {
+  // console.log(req.body);
+  try {
+    const result = await GoolgeUser.updateOne(
+      { email: req.body.email },
+      { $set: { role: req.body.role } }
+    );
+    return res.send("驗證成功 有此使用者!");
+  } catch (e) {
+    return res.status(500).send("無法儲存使用者。。。");
+  }
 });
 
 router.post("/register", async (req, res) => {
@@ -49,10 +63,46 @@ router.post("/register", async (req, res) => {
   }
 });
 
+// 註冊及驗證OAuth
 router.post("/google", async (req, res) => {
-  console.log(req.body);
-  return res.send("回傳server收到");
+  let userInfo = req.body.userInfo;
+  let message;
+  let token;
+  let user;
+  // 確認信箱是否已註冊
+  const emailExist = await GoolgeUser.findOne({ email: userInfo.email });
+  if (emailExist) {
+    console.log("GoogleUser已存在");
+    message = "GoogleUser已存在";
+    token = generateToken(emailExist);
+    user = emailExist;
+  } else if (!emailExist) {
+    console.log("GoogleUser尚未註冊");
+    message = "GoogleUser尚未註冊";
+    let { name, email } = userInfo;
+    let username = name;
+    let newUser = new GoolgeUser({ username, email });
+    try {
+      let savedUser = await newUser.save();
+      token = generateToken(savedUser);
+      user = savedUser;
+      message = "Google使用者成功儲存!";
+    } catch (e) {
+      console.error(e);
+      return res.status(500).send("無法儲存使用者。。。");
+    }
+  }
+  return res.send({ message, token, user });
 });
+
+function generateToken(user) {
+  const tokenObject = {
+    _id: user._id,
+    email: user.email,
+    userType: user.userType,
+  };
+  return "JWT " + jwt.sign(tokenObject, process.env.PASSPORT_SECRET);
+}
 
 router.post("/login", async (req, res) => {
   // 確認數據是否符合規範

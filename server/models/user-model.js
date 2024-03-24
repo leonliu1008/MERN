@@ -29,6 +29,32 @@ const userSchema = new Schema({
   },
 });
 
+const googleGserSchema = new Schema({
+  username: {
+    type: String,
+    required: true,
+  },
+  email: {
+    type: String,
+    required: true,
+    minlength: 6,
+    maxlength: 50,
+  },
+  role: {
+    type: String,
+    enum: ["student", "instructor", ""],
+    default: "",
+  },
+  date: {
+    type: Date,
+    default: Date.now,
+  },
+  userType: {
+    type: String,
+    default: "google",
+  },
+});
+
 // instance methods
 /**
  * 它是在使用者模型(User model)的實例上呼叫的
@@ -40,7 +66,17 @@ userSchema.methods.isStudent = function () {
   return this.role == "student";
 };
 
+googleGserSchema.methods.isStudent = function () {
+  console.log("進行isStudent驗證");
+  return this.role == "student";
+};
+
 userSchema.methods.isInstructor = function () {
+  console.log("進行isInstructor驗證");
+  return this.role == "instructor";
+};
+
+googleGserSchema.methods.isInstructor = function () {
   console.log("進行isInstructor驗證");
   return this.role == "instructor";
 };
@@ -73,7 +109,10 @@ userSchema.pre("save", async function (next) {
   next();
 });
 
-module.exports = mongoose.model("User", userSchema);
+module.exports = {
+  User: mongoose.model("User", userSchema),
+  GoogleUser: mongoose.model("GoogleUser", googleGserSchema),
+};
 
 // pre範例
 // userSchema.pre('save', async function (next) {
