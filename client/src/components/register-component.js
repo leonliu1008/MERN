@@ -3,7 +3,6 @@ import { useNavigate } from "react-router-dom"; // 重新導向的功能
 import AutoService from "../services/auth_service";
 import { useGoogleLogin } from "@react-oauth/google";
 
-// 測試git
 const RegisterComponent = ({ currentUser, setCurrentUser }) => {
   const apiEndpoint = "https://www.googleapis.com/oauth2/v1/userinfo";
   const navigate = useNavigate(); // 重新導向的功能
